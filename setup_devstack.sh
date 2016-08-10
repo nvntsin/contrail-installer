@@ -1,12 +1,7 @@
 #!/bin/bash
     
-echo -e "Devstack Branch you want to setup: \n [ex: stable/havana]"
-
-read dvstk
-    
-    
 DEVSTACK_CLONE_URL="https://github.com/openstack-dev/devstack.git"
-DEVSTACK_CLONE_BRANCH="$dvstk"
+DEVSTACK_CLONE_BRANCH="stable/kilo"
 CONTRAIL_DIR=`pwd`
 DEVSTACK_CLONE_DIR=$CONTRAIL_DIR/../
 DEVSTACK_DIR=$DEVSTACK_CLONE_DIR/devstack
@@ -46,28 +41,29 @@ Changes_Devstack_localrc () {
             echo "localrc is already new"
         else
             cp  $CONTRAIL_DIR/devstack/samples/localrc-all $DEVSTACK_DIR/localrc
+            cp  $CONTRAIL_DIR/devstack/samples/stackrc $DEVSTACK_DIR/stackrc
         fi
-        cd $DEVSTACK_DIR
-        if [ -f $DEVSTACK_DIR/localrc ]; then	
-            # Changes in $DEVSTACK_DIR/localrc
-            sed -i '/ADMIN_PASSWORD/ a USE_SCREENS=True' $DEVSTACK_DIR/localrc
-            grep -q "Q_PLUGIN=opencontrail" $DEVSTACK_DIR/localrc
-            [ $? -eq 1 ] && sed -i '/ADMIN_PASSWORD/ a Q_PLUGIN=opencontrail' $DEVSTACK_DIR/localrc
-            sed -i 's/^#*GIT_BASE/GIT_BASE/g' $DEVSTACK_DIR/localrc
-            sed -i 's/^#*NOVA_VIF_DRIVER/NOVA_VIF_DRIVER/g' $DEVSTACK_DIR/localrc
-            sed -i "s/^HOST_IP=.*/HOST_IP=`ifconfig | head -n2 | tail -1 | cut -d: -f2 | cut -d' ' -f1`/" $DEVSTACK_DIR/localrc
-            if [ -f $CONTRAIL_DIR/localrc ] ; then
-                ENABLE_BINARY=`grep "CONTRAIL_DEFAULT_INSTALL" $CONTRAIL_DIR/localrc | cut -d'=' -f2`
-         
-                #Changes regarding Q_PLUGIN
-                if [ "$ENABLE_BINARY" = "True" ]; then
-                    [ `grep "^ *LAUNCHPAD_BRANCH=PPA" $CONTRAIL_DIR/localrc` ] && sed -i "s/.*Q_PLUGIN_CLASS=neutron_plugin_contrail.plugins.opencontrail.contrail_plugin_core.NeutronPluginContrailCoreV2.*/#Q_PLUGIN_CLASS=neutron_plugin_contrail.plugins.opencontrail.contrail_plugin_core.NeutronPluginContrailCoreV2/" ./localrc || sed -i "s/.*#Q_PLUGIN_CLASS=neutron_plugin_contrail.plugins.opencontrail.contrail_plugin_core.NeutronPluginContrailCoreV2.*/Q_PLUGIN_CLASS=neutron_plugin_contrail.plugins.opencontrail.contrail_plugin_core.NeutronPluginContrailCoreV2/" ./localrc
-                else
-                    sed -i "s/.*Q_PLUGIN_CLASS=neutron_plugin_contrail.plugins.opencontrail.contrail_plugin_core.NeutronPluginContrailCoreV2.*/#Q_PLUGIN_CLASS=neutron_plugin_contrail.plugins.opencontrail.contrail_plugin_core.NeutronPluginContrailCoreV2/" ./localrc
-                fi
-            fi
-        fi
-    
+#        cd $DEVSTACK_DIR
+#        if [ -f $DEVSTACK_DIR/localrc ]; then	
+#            # Changes in $DEVSTACK_DIR/localrc
+#            sed -i '/ADMIN_PASSWORD/ a USE_SCREENS=True' $DEVSTACK_DIR/localrc
+#            grep -q "Q_PLUGIN=opencontrail" $DEVSTACK_DIR/localrc
+#            [ $? -eq 1 ] && sed -i '/ADMIN_PASSWORD/ a Q_PLUGIN=opencontrail' $DEVSTACK_DIR/localrc
+#            sed -i 's/^#*GIT_BASE/GIT_BASE/g' $DEVSTACK_DIR/localrc
+#            sed -i 's/^#*NOVA_VIF_DRIVER/NOVA_VIF_DRIVER/g' $DEVSTACK_DIR/localrc
+#            sed -i "s/^HOST_IP=.*/HOST_IP=`ifconfig | head -n2 | tail -1 | cut -d: -f2 | cut -d' ' -f1`/" $DEVSTACK_DIR/localrc
+#            if [ -f $CONTRAIL_DIR/localrc ] ; then
+#                ENABLE_BINARY=`grep "CONTRAIL_DEFAULT_INSTALL" $CONTRAIL_DIR/localrc | cut -d'=' -f2`
+#         
+#                #Changes regarding Q_PLUGIN
+#                if [ "$ENABLE_BINARY" = "True" ]; then
+#                    [ `grep "^ *LAUNCHPAD_BRANCH=PPA" $CONTRAIL_DIR/localrc` ] && sed -i "s/.*Q_PLUGIN_CLASS=neutron_plugin_contrail.plugins.opencontrail.contrail_plugin_core.NeutronPluginContrailCoreV2.*/#Q_PLUGIN_CLASS=neutron_plugin_contrail.plugins.opencontrail.contrail_plugin_core.NeutronPluginContrailCoreV2/" ./localrc || sed -i "s/.*#Q_PLUGIN_CLASS=neutron_plugin_contrail.plugins.opencontrail.contrail_plugin_core.NeutronPluginContrailCoreV2.*/Q_PLUGIN_CLASS=neutron_plugin_contrail.plugins.opencontrail.contrail_plugin_core.NeutronPluginContrailCoreV2/" ./localrc
+#                else
+#                    sed -i "s/.*Q_PLUGIN_CLASS=neutron_plugin_contrail.plugins.opencontrail.contrail_plugin_core.NeutronPluginContrailCoreV2.*/#Q_PLUGIN_CLASS=neutron_plugin_contrail.plugins.opencontrail.contrail_plugin_core.NeutronPluginContrailCoreV2/" ./localrc
+#               fi
+#            fi
+#        fi
+#    
     fi
     
 }
@@ -80,5 +76,5 @@ Setup_Devstack () {
     
 Setup_Devstack
 
-echo "Devstack $dvstk : setup completed successfully"    
+echo "Devstack stable/kilo : setup completed successfully"    
     

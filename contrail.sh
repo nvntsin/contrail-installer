@@ -595,7 +595,15 @@ function build_contrail() {
     sudo mkdir -p /var/log/contrail
     sudo chown -R $C_UID:$root /var/log/contrail
     sudo chmod -R 664 /var/log/contrail/*
+	
+    #Generates and adds ssh-key to github.com account for contrail repo sync
 
+    rm /home/$CONTRAIL_USER/.ssh/id_rsa*
+    ssh-keygen -b 4096 -t rsa -f /home/$CONTRAIL_USER/.ssh/id_rsa -q -N ""
+    eval "$(ssh-agent -s)"
+    ssh-add /home/$CONTRAIL_USER/.ssh/id_rsa
+    curl -u "nxpvcpe:8fa373c4cc8495e636ad13f0d70cb23a4f912f5f" --data "{\"title\":\"`echo $CONTRAIL_USER`_`date +%d%m%y`\",\"key\":\"`cat /home/$CONTRAIL_USER/.ssh/id_rsa.pub`\"}" https://api.github.com/user/keys
+    ssh -o StrictHostKeyChecking=no -T git@github.com
 
     #checking whether previous execution stage of script is at started then
     #only allow to get the dependencies
@@ -1222,7 +1230,7 @@ function configure_contrail() {
     #python $TOP_DIR/setup_contrail.py --physical_interface=$PHYSICAL_INTERFACE --cfgm_ip $SERVICE_HOST $contrail_gw_interface
     # )
 
-    #defaults loading
+    #defaults loading && setup devstack
     sudo mkdir -p /etc/contrail
     sudo mkdir -p /etc/sysconfig/network-scripts    
     sudo chown -R `whoami` /etc/contrail
@@ -1231,7 +1239,7 @@ function configure_contrail() {
     sudo chown -R `whoami` /etc/sysconfig/network-scripts
     sudo chmod  ug+w /etc/sysconfig/network-scripts/*
     cd $TOP_DIR  
-    
+    sh setup_devstack.sh 
     #un-comment if required after review
     #KEYSTONE_IP=${KEYSTONE_IP:-127.0.0.1}
     #CONTRAIL_ADMIN_TOKEN=${CONTRAIL_ADMIN_TOKEN:-''}

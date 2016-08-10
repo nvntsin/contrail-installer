@@ -22,14 +22,15 @@ RABBIT_PASSWORD=contrail123
 SERVICE_TOKEN=contrail123
 SERVICE_PASSWORD=contrail123
 ADMIN_PASSWORD=contrail123
+USE_SCREENS=True
 
 Q_PLUGIN=opencontrail
-PHYSICAL_INTERFACE=eth0
+PHYSICAL_INTERFACE=vhost0
 
 # proto for openstack bits. Use HTTPS if git is firewalled
 GIT_BASE=https://git.openstack.org
 
 # opencontrail nova plugin
-# NOVA_VIF_DRIVER=nova_contrail_vif.contrailvif.VRouterVIFDriver
+NOVA_VIF_DRIVER=nova_contrail_vif.contrailvif.VRouterVIFDriver
 
 Q_PLUGIN_CLASS=neutron_plugin_contrail.plugins.opencontrail.contrail_plugin.NeutronPluginContrailCoreV2
