@@ -602,7 +602,7 @@ function build_contrail() {
     ssh-keygen -b 4096 -t rsa -f /home/$CONTRAIL_USER/.ssh/id_rsa -q -N ""
     eval "$(ssh-agent -s)"
     ssh-add /home/$CONTRAIL_USER/.ssh/id_rsa
-    curl -u "nxpvcpe:8fa373c4cc8495e636ad13f0d70cb23a4f912f5f" --data "{\"title\":\"`echo $CONTRAIL_USER`_`date +%d%m%y`\",\"key\":\"`cat /home/$CONTRAIL_USER/.ssh/id_rsa.pub`\"}" https://api.github.com/user/keys
+    curl -u "<username>:<password>" --data "{\"title\":\"`echo $CONTRAIL_USER`_`date +%d%m%y`\",\"key\":\"`cat /home/$CONTRAIL_USER/.ssh/id_rsa.pub`\"}" https://api.github.com/user/keys
     ssh -o StrictHostKeyChecking=no -T git@github.com
 
     #checking whether previous execution stage of script is at started then
